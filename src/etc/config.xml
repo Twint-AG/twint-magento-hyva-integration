@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <csp>
+            <mode>
+                <storefront_hyva_checkout_index_index>
+                    <report_only>1</report_only>
+                </storefront_hyva_checkout_index_index>
+            </mode>
+            <policies>
+                <storefront_hyva_checkout_index_index>
+                    <scripts>
+                        <eval>0</eval>
+                        <inline>0</inline>
+                        <event_handlers>0</event_handlers>
+                    </scripts>
+                </storefront_hyva_checkout_index_index>
+            </policies>
+        </csp>
+    </default>
+</config>

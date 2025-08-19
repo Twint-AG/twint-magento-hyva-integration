@@ -1,0 +1,31 @@
+{
+  "name": "hyva-themes/magento2-hyva-checkout-twint",
+  "version": "0.0.0-dev",
+  "description": "This module enables the use of Twint with Hyvä Checkout",
+  "type": "magento2-module",
+  "license": "See LICENSE.md or https://hyva.io/license",
+  "authors": [
+    {
+      "name": "TWINT",
+      "email": "plugin@twint.ch",
+      "homepage": "https://twint.ch",
+      "role": "Maintainer"
+    }
+  ],
+  "require": {
+    "php": ">=8.1",
+    "ext-json": "*",
+    "twint-ag/twint-magento-extension": "*",
+    "hyva-themes/magento2-theme-module": "^1.3",
+    "hyva-themes/magento2-hyva-checkout": "^1.3"
+  },
+  "autoload": {
+    "files": [
+      "src/registration.php"
+    ],
+    "psr-4": {
+      "Hyva\\TwintPayment\\": "src/"
+    }
+  },
+  "prefer-stable": true
+}
