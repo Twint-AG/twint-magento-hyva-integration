@@ -1,5 +1,5 @@
 {
-  "name": "hyva-themes/magento2-hyva-checkout-twint",
+  "name": "twint-ag/twint-magento-hyva-integration",
   "version": "0.0.0-dev",
   "description": "This module enables the use of Twint with Hyvä Checkout",
   "type": "magento2-module",
@@ -27,7 +27,7 @@
       "src/registration.php"
     ],
     "psr-4": {
-      "Hyva\\TwintPayment\\": "src/"
+      "Twint\\MagentoHyva\\": "src/"
     }
   },
   "prefer-stable": true

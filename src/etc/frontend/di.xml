@@ -2,13 +2,13 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Quote\Api\PaymentMethodManagementInterface">
-        <plugin name="hide_express_checkout" type="Hyva\TwintPayment\Plugin\HideExpressCheckout" />
+        <plugin name="hide_express_checkout" type="Twint\MagentoHyva\Plugin\HideExpressCheckout" />
     </type>
 
     <type name="Hyva\Checkout\Model\Magewire\Payment\PlaceOrderServiceProvider">
         <arguments>
             <argument name="placeOrderServiceList" xsi:type="array">
-                <item name="twint_regular" xsi:type="object">Hyva\TwintPayment\Magewire\Payment\PlaceOrderService\TwintRegularCheckoutService</item>
+                <item name="twint_regular" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\PlaceOrderService\TwintRegularCheckoutService</item>
             </argument>
         </arguments>
     </type>

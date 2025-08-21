@@ -1,9 +1,9 @@
 <?php
 
-namespace Hyva\TwintPayment\Magewire\Payment\PlaceOrderService;
+namespace Twint\MagentoHyva\Magewire\Payment\PlaceOrderService;
 
 use Hyva\Checkout\Model\Magewire\Component\EvaluationResultFactory;
-use Hyva\Checkout\Model\Magewire\Component\EvaluationResultInterface;
+use Hyva\Checkout\Model\Magewire\Component\Evaluation\EvaluationResult;
 use Hyva\Checkout\Model\Magewire\Payment\AbstractOrderData;
 use Hyva\Checkout\Model\Magewire\Payment\AbstractPlaceOrderService;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
@@ -30,7 +30,7 @@ class TwintRegularCheckoutService extends AbstractPlaceOrderService
         parent::__construct($cartManagement, $orderData);
     }
 
-    public function evaluateCompletion(EvaluationResultFactory $resultFactory, ?int $orderId = null): EvaluationResultInterface
+    public function evaluateCompletion(EvaluationResultFactory $resultFactory, ?int $orderId = null): EvaluationResult
     {
         /** @var ScanQrModal $block */
         $block = $this->layoutFactory->create()->createBlock(ScanQrModal::class);

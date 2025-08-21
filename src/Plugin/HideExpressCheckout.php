@@ -1,6 +1,6 @@
 <?php
 
-namespace Hyva\TwintPayment\Plugin;
+namespace Twint\MagentoHyva\Plugin;
 
 use Magento\Quote\Api\PaymentMethodManagementInterface;
 use Twint\Magento\Model\Method\TwintExpressMethod;
