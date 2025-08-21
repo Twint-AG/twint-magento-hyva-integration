@@ -3,9 +3,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="checkout.payment.methods">
-            <block name="checkout.payment.method.twint_regular"
-                   as="twint_regular"
-                   template="Hyva_TwintPayment::qr-code.phtml">
+            <block name="checkout.payment.method.twint_regular" as="twint_regular">
                 <arguments>
                     <argument name="metadata" xsi:type="array">
                         <item name="subtitle" xsi:type="string" translate="true">Payment method offered by TWINT</item>

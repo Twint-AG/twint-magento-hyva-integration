@@ -10,6 +10,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <module name="Hyva_TwintPayment">
         <sequence>
+            <module name="Magento_RequireJs" />
+            <module name="Magento_Checkout" />
             <module name="Hyva_Checkout" />
             <module name="Twint_Magento" />
         </sequence>
