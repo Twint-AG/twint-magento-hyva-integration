@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\MagentoHyva\Magewire\Payment\PlaceOrderService;
 
-use Hyva\Checkout\Model\Magewire\Component\EvaluationResultFactory;
 use Hyva\Checkout\Model\Magewire\Component\Evaluation\EvaluationResult;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultFactory;
 use Hyva\Checkout\Model\Magewire\Payment\AbstractOrderData;
 use Hyva\Checkout\Model\Magewire\Payment\AbstractPlaceOrderService;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
@@ -42,13 +44,13 @@ class TwintRegularCheckoutService extends AbstractPlaceOrderService
         $hashedParingId = $this->cryptoHandler->hash($pairing->getPairingId());
 
         $params = [
-            'success'     => true,
-            'id'          => $hashedParingId,
-            'token'       => $pairing->getToken(),
-            'amount'      => $this->priceCurrency->format($pairing->getAmount()),
-            'modal'       => $block->toHtml(),
+            'success' => true,
+            'id' => $hashedParingId,
+            'token' => $pairing->getToken(),
+            'amount' => $this->priceCurrency->format($pairing->getAmount()),
+            'modal' => $block->toHtml(),
             'monitor_url' => $this->urlBuilder->getUrl('twint/regular/status') . '?id=' . $hashedParingId,
-            'cancel_url'  => $this->urlBuilder->getUrl('twint/payment/cancel') . '?id=' . $hashedParingId,
+            'cancel_url' => $this->urlBuilder->getUrl('twint/payment/cancel') . '?id=' . $hashedParingId,
             'success_url' => $this->urlBuilder->getUrl('checkout/onepage/success'),
         ];
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\MagentoHyva\Plugin;
 
 use Magento\Quote\Api\PaymentMethodManagementInterface;

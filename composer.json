@@ -1,9 +1,12 @@
 {
   "name": "twint-ag/twint-magento-hyva-integration",
-  "version": "0.0.0-dev",
+  "version": "9.9.9-dev",
   "description": "This module enables the use of Twint with Hyvä Checkout",
+  "homepage": "https://twint.ch",
   "type": "magento2-module",
-  "license": "See LICENSE.md or https://hyva.io/license",
+  "license": [
+    "MIT"
+  ],
   "authors": [
     {
       "name": "TWINT",
@@ -12,23 +15,51 @@
       "role": "Maintainer"
     }
   ],
+  "keywords": [
+    "twint",
+    "twint.ch",
+    "switzerland",
+    "checkout",
+    "express checkout",
+    "payment",
+    "magento",
+    "magento2",
+    "hyva",
+    "hyva-checkout",
+    "hyva-themes"
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": ">=8.1",
     "ext-json": "*",
     "hyva-themes/magento2-theme-module": "^1.3",
     "hyva-themes/magento2-hyva-checkout": "^1.3",
-    "magento/framework": "*",
-    "magento/module-sales": "*",
-    "twint-ag/sdk": "*",
-    "twint-ag/twint-magento-extension": "*"
+    "magento/framework": ">=103.0.4",
+    "magento/module-sales": ">=103.0.4",
+    "twint-ag/sdk": "^1.4.5",
+    "twint-ag/twint-magento-extension": "^1.1.0"
   },
+  "require-dev": {
+    "symplify/easy-coding-standard": "^12.1",
+    "slevomat/coding-standard": "^8.15",
+    "rector/rector": "^1.2",
+    "phpspec/prophecy-phpunit": "^2.2",
+    "phpunit/phpunit": "^10.5",
+    "mockery/mockery": "^1.6"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com/"
+    }
+  ],
   "autoload": {
     "files": [
-      "src/registration.php"
+      "registration.php"
     ],
     "psr-4": {
-      "Twint\\MagentoHyva\\": "src/"
+      "Twint\\MagentoHyva\\": ""
     }
-  },
-  "prefer-stable": true
+  }
 }
