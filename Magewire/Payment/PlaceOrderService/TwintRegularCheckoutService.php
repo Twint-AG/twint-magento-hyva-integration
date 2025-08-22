@@ -32,6 +32,11 @@ class TwintRegularCheckoutService extends AbstractPlaceOrderService
         parent::__construct($cartManagement, $orderData);
     }
 
+    public function canRedirect(): bool
+    {
+        return false;
+    }
+
     public function evaluateCompletion(EvaluationResultFactory $resultFactory, ?int $orderId = null): EvaluationResult
     {
         /** @var ScanQrModal $block */
