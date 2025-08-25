@@ -4,6 +4,9 @@
     <type name="Magento\Quote\Api\PaymentMethodManagementInterface">
         <plugin name="hide_express_checkout" type="Twint\MagentoHyva\Plugin\HideExpressCheckout" />
     </type>
+    <type name="Twint\Magento\Block\Frontend\Express\Button">
+        <plugin name="hide_default_express_checkout_button" type="Twint\MagentoHyva\Plugin\HideDefaultExpressCheckoutButton" />
+    </type>
 
     <type name="Hyva\Checkout\Model\Magewire\Payment\PlaceOrderServiceProvider">
         <arguments>

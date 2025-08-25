@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="hyva_modal"/>
+
+    <body>
+        <!-- Simple Product -->
+        <referenceBlock name="product.info.addtocart">
+            <block name="product.info.twint"
+                   template="Twint_MagentoHyva::checkout/express-button.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>
