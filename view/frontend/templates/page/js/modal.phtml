@@ -1,0 +1,366 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+// phpcs:disable Generic.Files.LineLength.TooLong
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var HyvaCsp $hyvaCsp */
+/** @var ViewModelRegistry $viewModels */
+
+?>
+<script>
+    'use strict';
+
+    (function () {
+        window.twint.modal = function () {
+            return Object.assign(
+                hyva.modal(),
+                {
+                    // Refactored helper methods for maintainability
+                    getModalContent(elementId) {
+                        return document.getElementById(elementId);
+                    },
+
+                    renderModal(elementId, config) {
+                        const modalContent = this.getModalContent(elementId);
+                        if (!modalContent || !config) return;
+                        modalContent.innerHTML = config.modal;
+
+                        this.ensureBaseStates(modalContent);
+                        this.updateAmountsAndToken(modalContent, config);
+                        this.setupQrCode(modalContent, config);
+
+                        // Initialize token copier (replaces clipboard.js)
+                        this.initTokenCopier(modalContent);
+                        this.resetTokenCopierUi(modalContent);
+
+                        // Initialize mobile connectors (Android/iOS)
+                        this.initMobileConnectors(modalContent);
+                    },
+
+                    ensureBaseStates(modalContent) {
+                        const qrModal = modalContent.querySelector('#qr-modal-content');
+                        if (qrModal) qrModal.style.display = 'block';
+                        const toPay = modalContent.querySelector('.to-pay');
+                        if (toPay) toPay.style.display = 'block';
+                        const onSuccess = modalContent.querySelector('.on-success');
+                        if (onSuccess) onSuccess.style.display = 'none';
+                        const onFailed = modalContent.querySelector('.on-failed');
+                        if (onFailed) onFailed.style.display = 'none';
+                    },
+
+                    updateAmountsAndToken(modalContent, config) {
+                        const amountEl = modalContent.querySelector('#twint-amount');
+                        if (amountEl) amountEl.innerHTML = config.amount;
+                        const tokenInput = modalContent.querySelector('#qr-token');
+                        if (tokenInput) tokenInput.value = config.token;
+                    },
+
+                    setupQrCode(modalContent, config) {
+                        const qr = modalContent.querySelector('#qrcode');
+                        if (!qr) return;
+                        qr.innerHTML = '';
+                        if (typeof QRCode !== 'undefined') {
+                            new QRCode(qr, {
+                                text: config.token,
+                                width: 300,
+                                height: 300,
+                                colorDark: '#000000',
+                                colorLight: '#ffffff',
+                                correctLevel: QRCode.CorrectLevel.H
+                            });
+                        }
+                    },
+
+                    updateUiState({ toPay = null, onSuccess = null, onFailed = null } = {}) {
+                        const modalContent = this.getModalContent();
+                        if (!modalContent) return;
+                        const toPayEl = modalContent.querySelector('.to-pay');
+                        const onSuccessEl = modalContent.querySelector('.on-success');
+                        const onFailedEl = modalContent.querySelector('.on-failed');
+                        if (toPayEl && toPay !== null) toPayEl.style.display = toPay;
+                        if (onSuccessEl && onSuccess !== null) onSuccessEl.style.display = onSuccess;
+                        if (onFailedEl && onFailed !== null) onFailedEl.style.display = onFailed;
+                    },
+
+                    handleMonitorResponse(response) {
+                        if (!response || response.finish !== true) return;
+                        if (this.monitorTimer) {
+                            clearInterval(this.monitorTimer);
+                            this.monitorTimer = null;
+                        }
+                        if (response.paid === true) {
+                            this.onSuccess();
+                        } else {
+                            this.onFailed();
+                        }
+                    },
+
+                    // Token copier (native, replaces clipboard.js)
+                    initTokenCopier(modalContent) {
+                        try {
+                            const btn = modalContent.querySelector('#tw-copy');
+                            const input = modalContent.querySelector('#qr-token');
+                            if (!btn || !input) return;
+                            // Ensure only one listener per render
+                            btn.addEventListener('click', (e) => this.onCopyClick(e, input, btn), { passive: false });
+                        } catch (e) {
+                            console.error('TWINT: Failed to init token copier', e);
+                        }
+                    },
+
+                    resetTokenCopierUi(modalContent) {
+                        const btn = modalContent.querySelector('#tw-copy');
+                        const input = modalContent.querySelector('#qr-token');
+                        if (!btn || !input) return;
+                        btn.innerText = 'Copy code';
+                        btn.classList.remove('copied');
+                        btn.classList.remove('border-green-500');
+                        btn.classList.remove('text-green-500');
+                        try { input.disabled = true; } catch (e) {}
+                    },
+
+                    async onCopyClick(event, input, btn) {
+                        try {
+                            if (event && event.preventDefault) event.preventDefault();
+                            if (!input || !btn) return;
+                            input.disabled = false;
+                            const text = input.value || '';
+                            await this.copyToClipboard(text, input);
+                            this.onCopySuccess(btn, input);
+                        } catch (e) {
+                            this.onCopyError(btn, e);
+                        }
+                    },
+
+                    copyToClipboard(text, inputEl) {
+                        return new Promise((resolve, reject) => {
+                            if (navigator.clipboard && window.isSecureContext) {
+                                navigator.clipboard.writeText(text).then(resolve).catch(reject);
+                                return;
+                            }
+                            try {
+                                // Fallback using a temporary textarea
+                                const textarea = document.createElement('textarea');
+                                textarea.value = text;
+                                textarea.style.position = 'fixed';
+                                textarea.style.left = '-9999px';
+                                document.body.appendChild(textarea);
+                                textarea.focus();
+                                textarea.select();
+                                const successful = document.execCommand('copy');
+                                document.body.removeChild(textarea);
+                                if (successful) {
+                                    resolve();
+                                } else {
+                                    reject(new Error('execCommand copy failed'));
+                                }
+                            } catch (err) {
+                                try {
+                                    // As a last fallback try selecting the input element itself
+                                    if (inputEl) {
+                                        inputEl.focus();
+                                        inputEl.select();
+                                        const ok = document.execCommand('copy');
+                                        window.getSelection && window.getSelection().removeAllRanges();
+                                        if (ok) return resolve();
+                                    }
+                                } catch (_) {}
+                                reject(err);
+                            }
+                        });
+                    },
+
+                    onCopySuccess(btn, input) {
+                        try {
+                            if (document && document.activeElement) {
+                                document.activeElement.blur();
+                            }
+                            if (window.getSelection) {
+                                const sel = window.getSelection();
+                                if (sel && sel.removeAllRanges) sel.removeAllRanges();
+                            }
+                        } catch (e) {}
+                        btn.innerText = 'Copied!';
+                        btn.classList.add('copied');
+                        btn.classList.add('border-green-500');
+                        btn.classList.add('text-green-500');
+                        try { input.disabled = true; } catch (e) {}
+                    },
+
+                    onCopyError(btn, err) {
+                        console.error('TWINT: Copy failed', err);
+                        // Keep default UI; optionally could show an error state
+                    },
+
+                    // Mobile connectors initialization
+                    initMobileConnectors(modalContent) {
+                        try {
+                            this.initAndroidConnector(modalContent);
+                            this.initIosConnector(modalContent);
+                        } catch (e) {
+                            console.error('TWINT: Failed to init mobile connectors', e);
+                        }
+                    },
+
+                    // Android: auto open app deeplink via button with id 'twint-addroid-button'
+                    initAndroidConnector(modalContent) {
+                        const btn = modalContent.querySelector('#twint-addroid-button');
+                        if (!btn) return;
+
+                        const twintGuides = modalContent.querySelector('#twint-guides');
+                        if (twintGuides) twintGuides.classList.add('hidden');
+
+                        const templateHref = btn.getAttribute('data-href');
+                        if (!templateHref) return;
+
+                        const href = templateHref.replace('--TOKEN--', this.config.token || '');
+                        btn.href = href;
+
+                        // Auto-click to open app and then show QR code fallback
+                        try {
+                            // Use setTimeout to ensure DOM is ready
+                            setTimeout(() => {
+                                btn.click();
+                                this.showMobileQrCode();
+                            }, 0);
+                        } catch (e) {
+                            // If click fails, still show QR
+                            this.showMobileQrCode();
+                        }
+                    },
+
+                    // iOS: bind bank images and select list under '#twint-ios-container'
+                    initIosConnector(modalContent) {
+                        const container = modalContent.querySelector('#twint-ios-container');
+                        if (!container) return;
+
+                        const twintGuides = modalContent.querySelector('#twint-guides');
+                        if (twintGuides) twintGuides.classList.add('hidden');
+
+                        // Bind bank images
+                        const banks = container.querySelectorAll('img[data-link]');
+                        if (banks && banks.forEach) {
+                            banks.forEach((bank) => {
+                                bank.addEventListener('touchend', (event) => {
+                                    const link = bank.getAttribute('data-link');
+                                    this.openAppBank(link);
+                                }, { passive: true });
+                            });
+                        }
+
+                        // Bind select change
+                        const select = container.querySelector('select');
+                        if (select) {
+                            try { select.selectedIndex = 0; } catch (e) {}
+                            select.addEventListener('change', (event) => {
+                                const el = event.target;
+                                let link = '';
+                                try {
+                                    link = el.options[el.selectedIndex].value;
+                                } catch (e) {}
+                                this.openAppBank(link);
+                            });
+                        }
+
+                        // Ensure QR code block for mobile is visible as fallback
+                        this.showMobileQrCode();
+                    },
+
+                    openAppBank(link) {
+                        if (!link) return;
+                        const token = this.config && this.config.token ? this.config.token : '';
+                        link = link.replace('--TOKEN--', token);
+
+                        try {
+                            window.location.replace(link);
+
+                            const checkLocation = setInterval(() => {
+                                try {
+                                    if (window.location.href !== link) {
+                                        this.showMobileQrCode();
+                                    }
+                                } catch (e) {
+                                    // ignore
+                                }
+                                clearInterval(checkLocation);
+                            }, 2000);
+                        } catch (e) {
+                            // If navigation fails, show QR fallback
+                            this.showMobileQrCode();
+                        }
+                    },
+
+                    showMobileQrCode() {
+                        // Mimic legacy connector.showMobileQrCode behavior
+                        const blocks = document.querySelectorAll('.default-hidden');
+                        if (!blocks) return;
+                        blocks.forEach((block) => {
+                            block.classList.remove('hidden');
+                        });
+                    },
+
+                    registerCancelOrder() {
+                        if (!this.originalHide) {
+                            this.originalHide = this.hide;
+                            this.hide = (value) => {
+                                this.originalHide.call(this, value);
+
+                                const cancelUrl = '<?= $block->getUrl('twint/payment/cancel') ?>' + '?id=' + this.config.pairingId;
+
+                                fetch(cancelUrl).catch(error => console.error('Error:', error));
+                            }
+                        }
+                    },
+
+                    registerMonitorOrder() {
+                        this.monitorTimer = null;
+                        const origHide = this.hide;
+
+                        const monitorUrl = '<?= $block->getUrl('twint/regular/status') ?>' + '?id=' + this.config.pairingId;
+
+                        const checkStatus = () => {
+                            fetch(monitorUrl)
+                                .then(resp => resp.json())
+                                .then(response => this.handleMonitorResponse(response))
+                                .catch(error => console.error('Failed to check status:', error));
+                        };
+
+                        this.monitorTimer = setInterval(checkStatus, 2000);
+
+                        this.hide = (value) => {
+                            origHide.call(this, value);
+                            if (this.monitorTimer) {
+                                clearInterval(this.monitorTimer);
+                                this.monitorTimer = null;
+                            }
+                        };
+                    },
+
+                    onSuccess() {
+                        this.updateUiState({ toPay: 'none', onSuccess: 'block', onFailed: 'none' });
+                        window.location = this.config.success_url;
+                    },
+
+                    onFailed() {
+                        this.updateUiState({ toPay: 'none', onSuccess: 'none', onFailed: 'block' });
+                    },
+                }
+            )
+        }
+    })( window.twint = window.twint || {} );
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>

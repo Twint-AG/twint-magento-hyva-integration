@@ -15,4 +15,8 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Hyva\Theme\ViewModel\ProductListItem">
+        <plugin name="vendor_after_price_on_list" type="Twint\MagentoHyva\Plugin\AfterProductListItemPrice"/>
+    </type>
 </config>
