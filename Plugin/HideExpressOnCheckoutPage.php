@@ -7,7 +7,7 @@ namespace Twint\MagentoHyva\Plugin;
 use Magento\Quote\Api\PaymentMethodManagementInterface;
 use Twint\Magento\Model\Method\TwintExpressMethod;
 
-class HideExpressCheckout
+class HideExpressOnCheckoutPage
 {
     public function afterGetList(PaymentMethodManagementInterface $subject, array $result): array
     {

@@ -1,23 +1,19 @@
 <?xml version="1.0"?>
-<!--
-  ~ Copyright Magmodules.eu. All rights reserved.
-  ~ See COPYING.txt for license details.
-  -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="twint_modal"/>
 
+    <head>
+        <css src="Twint_MagentoHyva::css/twint_override.css"/>
+    </head>
+
     <body>
+        <!-- Register to display the Express Checkout button on the Fly cart -->
         <referenceContainer name="cart-drawer.bottom">
-            <block name="cart-drawer.bottom.express-button-wrapper"
-                   template="Twint_MagentoHyva::checkout/express-checkout/cart-drawer.phtml">
-                <block name="cart-drawer.bottom.express-button" as="express-button" template="Twint_MagentoHyva::checkout/express-button.phtml">
-                    <arguments>
-                        <argument name="magewire" xsi:type="array">
-                            <item name="type" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</item>
-                            <item name="shouldDisplayLabel" xsi:type="boolean">false</item>
-                        </argument>
-                    </arguments>
-                </block>
+            <block name="cart-drawer.bottom.express-button-wrapper" template="Twint_MagentoHyva::checkout/express-checkout/mini-cart.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
+                </arguments>
+                <block name="cart-drawer.bottom.express-button-wrapper.loading" as="loading" template="Hyva_Theme::ui/loading.phtml"/>
             </block>
         </referenceContainer>
     </body>

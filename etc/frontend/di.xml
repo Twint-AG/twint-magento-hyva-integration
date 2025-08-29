@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Quote\Api\PaymentMethodManagementInterface">
-        <plugin name="hide_express_checkout" type="Twint\MagentoHyva\Plugin\HideExpressCheckout" />
+        <plugin name="hide_express_on_checkout_page" type="Twint\MagentoHyva\Plugin\HideExpressOnCheckoutPage" />
     </type>
     <type name="Twint\Magento\Block\Frontend\Express\Button">
         <plugin name="hide_default_express_checkout_button" type="Twint\MagentoHyva\Plugin\HideDefaultExpressCheckoutButton" />
@@ -15,8 +15,7 @@
             </argument>
         </arguments>
     </type>
-
     <type name="Hyva\Theme\ViewModel\ProductListItem">
-        <plugin name="vendor_after_price_on_list" type="Twint\MagentoHyva\Plugin\AfterProductListItemPrice"/>
+        <plugin name="display_express_on_product_list" type="Twint\MagentoHyva\Plugin\DisplayExpressOnProductList"/>
     </type>
 </config>

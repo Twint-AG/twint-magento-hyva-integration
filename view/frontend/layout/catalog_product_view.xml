@@ -3,16 +3,13 @@
     <update handle="hyva_modal"/>
 
     <body>
-        <!-- Simple Product -->
+        <!-- Product Detail Page -->
         <referenceBlock name="product.info.addtocart">
-            <block name="product.info.addtocart.twint" template="Twint_MagentoHyva::checkout/express-checkout/product-detail.phtml">
-                <block name="product.info.addtocart.twint.express-button"
-                       as="express-button"
-                       template="Twint_MagentoHyva::checkout/express-button.phtml">
-                    <arguments>
-                        <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
-                    </arguments>
-                </block>
+            <block name="product.info.addtocart.twint" template="Twint_MagentoHyva::checkout/express-checkout/product-detail-page.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
+                </arguments>
+                <block name="product.info.addtocart.twint.loading" as="loading" template="Hyva_Theme::ui/loading.phtml"/>
             </block>
         </referenceBlock>
     </body>
