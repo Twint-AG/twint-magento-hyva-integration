@@ -2,12 +2,14 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="hyva_modal"/>
 
-    <referenceContainer name="cart.summary">
-        <block after='-' name="checkout.cart.methods.twint" template="Twint_MagentoHyva::checkout/express-checkout/cart.phtml">
-            <arguments>
-                <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
-            </arguments>
-            <block name="checkout.cart.methods.twint.loading" as="loading" template="Hyva_Theme::ui/loading.phtml"/>
-        </block>
-    </referenceContainer>
+    <body>
+        <!-- Cart Page -->
+        <referenceContainer name="cart.summary">
+            <block after='-' name="checkout.cart.methods.twint" template="Twint_MagentoHyva::checkout/express-checkout/cart.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
 </page>

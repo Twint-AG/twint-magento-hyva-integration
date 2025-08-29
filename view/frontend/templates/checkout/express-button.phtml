@@ -1,0 +1,17 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$uniqueId = uniqid();
+
+?>
+
+<button type="button" @click="checkout" class="tw-button">
+    <span class="tw-icon-block">
+        <img class="tw-icon" src="<?= $block->getViewFileUrl('Twint_Magento/images/express.svg') ?>" alt="Express Checkout">
+    </span>
+    <span class="tw-label ml-2"><?= $escaper->escapeHtmlAttr(__("Express Checkout")) ?></span>
+</button>

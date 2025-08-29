@@ -9,7 +9,6 @@
                 <arguments>
                     <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
                 </arguments>
-                <block name="product.info.addtocart.twint.loading" as="loading" template="Hyva_Theme::ui/loading.phtml"/>
             </block>
         </referenceBlock>
     </body>

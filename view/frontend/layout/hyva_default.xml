@@ -7,13 +7,12 @@
     </head>
 
     <body>
-        <!-- Register to display the Express Checkout button on the Fly cart -->
+        <!-- Mini Cart -->
         <referenceContainer name="cart-drawer.bottom">
             <block name="cart-drawer.bottom.express-button-wrapper" template="Twint_MagentoHyva::checkout/express-checkout/mini-cart.phtml">
                 <arguments>
                     <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
                 </arguments>
-                <block name="cart-drawer.bottom.express-button-wrapper.loading" as="loading" template="Hyva_Theme::ui/loading.phtml"/>
             </block>
         </referenceContainer>
     </body>

@@ -1,53 +1,30 @@
 <?php
 
-/** @var \Magento\Framework\Escaper $escaper */
+declare(strict_types=1);
+
 /** @var \Magento\Framework\View\Element\Template $block */
-/** @var \Hyva\Theme\Model\ViewModelRegistry $viewModels */
-/** @var \Hyva\Theme\ViewModel\Modal $modalViewModel */
 /** @var \Hyva\Theme\ViewModel\HyvaCsp $hyvaCsp */
 
-$uniqueId = uniqid('twint_');
+$uniqueId = uniqid();
 
 ?>
 
-<div x-data="expressCheckout_<?= $uniqueId ?>" class="">
-    <button type="button" @click="checkout" class="tw-button">
-        <span class="tw-icon-block">
-            <img class="tw-icon" src="<?= $block->getViewFileUrl('Twint_Magento/images/express.svg') ?>" alt="Express Checkout">
-        </span>
-        <span class="tw-label ml-2"><?= $escaper->escapeHtmlAttr(__("Express Checkout")) ?></span>
-    </button>
+<div x-data="expressCheckout_<?= $uniqueId ?>">
+    <?= $block->getLayout()
+              ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express-button' . $uniqueId)
+              ->setTemplate('Twint_MagentoHyva::checkout/express-button.phtml')
+              ->toHtml() ?>
 
-    <?= $block->getChildHtml('loading') ?>
+    <?= $block->getLayout()
+              ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.loading' . $uniqueId)
+              ->setTemplate('Hyva_Theme::ui/loading.phtml')
+              ->toHtml() ?>
 
-    <div x-cloak x-spread="overlay" x-bind="overlay" class="fixed inset-0 flex items-center justify-center text-left bg-black bg-opacity-50" style="z-index: 40;">
-        <div x-ref="dialog"
-             role="dialog"
-             class="twint text-16"
-             data-role="modal"
-             data-type="<%- data.type %>"
-             tabindex="0">
-            <div data-role="focusable-start" tabindex="0"></div>
-            <div class="modal-inner-wrap twint tw-modal"
-                 data-role="focusable-scope">
-                <header class="twint-modal-header sticky top-0 flex justify-between items-center bg-white">
-                    <img class="tw-logo hidden md:block ml-4" src="<?= $block->getViewFileUrl('Twint_Magento::images/twint_logo.png') ?>" alt="<?= __("TWINT Logo"); ?>">
-                    <button @click="hide"
-                            id="tw-close"
-                            class="flex items-center justify-between sm:justify-start mx-4"
-                            data-role="closeBtn"
-                            type="button">
-                        <span class="order-last sm:order-first"><?= __('Cancel checkout') ?></span>
-                        <svg class="mr-3 md:mr-0 md:ml-3" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1.40001 12.8078L0.692261 12.1L6.29226 6.50001L0.692261 0.900011L1.40001 0.192261L7.00001 5.79226L12.6 0.192261L13.3078 0.900011L7.70776 6.50001L13.3078 12.1L12.6 12.8078L7.00001 7.20776L1.40001 12.8078Z" fill="#1C1B1F"/>
-                        </svg>
-                    </button>
-                </header>
-                <div id="<?= $uniqueId ?>" class="twint-modal-content p-0 md:p-4" data-role="content"></div>
-            </div>
-            <div data-role="focusable-end" tabindex="0"></div>
-        </div>
-    </div>
+    <?= $block->getLayout()
+              ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express.modal' . $uniqueId)
+              ->setTemplate('Twint_MagentoHyva::checkout/express-modal.phtml')
+              ->setData('uniqueId', $uniqueId)
+              ->toHtml() ?>
 
     <script>
         "use strict";
