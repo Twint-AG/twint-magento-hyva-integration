@@ -7,7 +7,7 @@
         <referenceBlock name="product.info.addtocart">
             <block name="product.info.addtocart.twint" template="Twint_MagentoHyva::checkout/express-checkout/product-detail-page.phtml">
                 <arguments>
-                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
+                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButtonPDP</argument>
                 </arguments>
             </block>
         </referenceBlock>

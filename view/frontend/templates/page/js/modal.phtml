@@ -150,12 +150,11 @@ use Magento\Framework\View\Element\Template;
 
                     handleRegularResult(response) {
                         // Regular checkout
-                        if (response.paid === true) {
-                            this.onRegularSuccess();
-                            window.location = '<?= $block->getUrl('checkout/onepage/success') ?>';
+                        if (response.paid !== true) {
+                            return this.onFailed();
                         }
 
-                        return this.onFailed();
+                        window.location = '<?= $block->getUrl('checkout/onepage/success') ?>';
                     },
 
                     // Token copier (native, replaces clipboard.js)
@@ -410,11 +409,6 @@ use Magento\Framework\View\Element\Template;
                                 this.monitorTimer = null;
                             }
                         };
-                    },
-
-                    onRegularSuccess() {
-                        this.updateUiState({ toPay: 'none', onSuccess: 'block', onFailed: 'none' });
-                        window.location = '<?= $block->getUrl('checkout/onepage/success') ?>';
                     },
 
                     showExpressSuccess(order) {

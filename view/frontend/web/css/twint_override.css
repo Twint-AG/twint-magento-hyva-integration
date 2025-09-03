@@ -11,10 +11,16 @@
     position: relative;
 }
 
-.tw-button-wrapper:has(.tw-button) {
+.tw-button-wrapper.plp:has(.tw-button) {
     position: absolute;
     bottom: 0;
     left: 0;
     padding: 16px;
     width: 100%;
+}
+
+div:has(> .tw-button-wrapper.pdp) {
+    flex-wrap: wrap;
+    justify-content: end;
+    row-gap: 0.5rem;
 }

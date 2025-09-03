@@ -15,7 +15,4 @@
             </argument>
         </arguments>
     </type>
-    <type name="Hyva\Theme\ViewModel\ProductListItem">
-        <plugin name="display_express_on_product_list" type="Twint\MagentoHyva\Plugin\DisplayExpressOnProductList"/>
-    </type>
 </config>

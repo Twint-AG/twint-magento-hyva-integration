@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="hyva_modal"/>
+
+    <body>
+        <!-- Product List Page -->
+        <referenceBlock name="catalog.list.item.addto">
+            <block name="catalog.list.item.addto.twint" template="Twint_MagentoHyva::checkout/express-checkout/product-list-page.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButtonPLP</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

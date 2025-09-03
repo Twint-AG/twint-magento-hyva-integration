@@ -7,11 +7,11 @@
     </head>
 
     <body>
-        <!-- Mini Cart -->
+        <!-- Cart Flyout -->
         <referenceContainer name="cart-drawer.bottom">
             <block name="cart-drawer.bottom.express-button-wrapper" template="Twint_MagentoHyva::checkout/express-checkout/mini-cart.phtml">
                 <arguments>
-                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton</argument>
+                    <argument name="magewire" xsi:type="object">Twint\MagentoHyva\Magewire\Payment\Method\ExpressButtonCartFlyout</argument>
                 </arguments>
             </block>
         </referenceContainer>
