@@ -23,6 +23,8 @@ use Magento\Framework\View\Element\Template;
             return Object.assign(
                 hyva.modal(),
                 {
+                    elementId: 'default-modal-content',
+                    mode: 'express',
                     processModal(elementId, response) {
                         if (response.backUrl) {
                             window.location = response.backUrl;
@@ -40,20 +42,21 @@ use Magento\Framework\View\Element\Template;
                             return;
                         }
 
+                        this.elementId = elementId;
                         this.config = response;
-                        this.renderModal(elementId, response)
+                        this.renderModal(response)
                         this.registerCancelOrder();
                         this.registerMonitorOrder();
                         this.show();
                     },
 
                     // Refactored helper methods for maintainability
-                    getModalContent(elementId) {
-                        return document.getElementById(elementId);
+                    getModalContent() {
+                        return document.getElementById(this.elementId);
                     },
 
-                    renderModal(elementId, config) {
-                        const modalContent = this.getModalContent(elementId);
+                    renderModal(config) {
+                        const modalContent = this.getModalContent();
                         if (!modalContent || !config) return;
                         modalContent.innerHTML = config.modal;
 
@@ -120,11 +123,31 @@ use Magento\Framework\View\Element\Template;
                             clearInterval(this.monitorTimer);
                             this.monitorTimer = null;
                         }
-                        if (response.paid === true) {
-                            this.onSuccess();
-                        } else {
-                            this.onFailed();
+
+                        return this.mode === 'express' ? this.handleExpressResult(response) : this.handleRegularResult(response);
+                    },
+
+                    handleExpressResult(response) {
+                        if (response.status > 0) {
+                            this.showExpressSuccess(response.order);
+                            return;
                         }
+
+                        if (response.status  === -2){
+                            return this.onFailed();
+                        }
+
+                        return this.onCancelled();
+                    },
+
+                    handleRegularResult(response) {
+                        // Regular checkout
+                        if (response.paid === true) {
+                            this.onRegularSuccess();
+                            window.location = '<?= $block->getUrl('checkout/onepage/success') ?>';
+                        }
+
+                        return this.onFailed();
                     },
 
                     // Token copier (native, replaces clipboard.js)
@@ -347,8 +370,13 @@ use Magento\Framework\View\Element\Template;
                     registerMonitorOrder() {
                         this.monitorTimer = null;
                         const origHide = this.hide;
+                        let monitorUrl;
 
-                        const monitorUrl = '<?= $block->getUrl('twint/regular/status') ?>' + '?id=' + this.config.pairingId;
+                        if (this.mode === 'express') {
+                            monitorUrl = '<?= $block->getUrl('twint/express/status') ?>' + '?id=' + this.config.pairingId;
+                        } else {
+                            monitorUrl = '<?= $block->getUrl('twint/regular/status') ?>' + '?id=' + this.config.pairingId;
+                        }
 
                         const checkStatus = () => {
                             fetch(monitorUrl)
@@ -368,9 +396,27 @@ use Magento\Framework\View\Element\Template;
                         };
                     },
 
-                    onSuccess() {
+                    onRegularSuccess() {
                         this.updateUiState({ toPay: 'none', onSuccess: 'block', onFailed: 'none' });
-                        window.location = this.config.success_url;
+                        window.location = '<?= $block->getUrl('checkout/onepage/success') ?>';
+                    },
+
+                    showExpressSuccess(order) {
+                        this.updateUiState({ toPay: 'none', onSuccess: 'block', onFailed: 'none' });
+
+                        const modal = this.getModalContent();
+                        const success = modal.querySelector('.on-success');
+
+                        success.style.display = 'block';
+
+                        const span = success.querySelector('span');
+                        span.innerHTML = order;
+
+                        const label = document.querySelector('#tw-close-' + this.elementId + ' span');
+                        label.innerHTML = 'Continue shopping';
+
+                        // Remove cancel order action on Hide button.
+                        this.hide = this.originalHide;
                     },
 
                     onFailed() {

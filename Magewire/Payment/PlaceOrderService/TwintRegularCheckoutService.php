@@ -50,7 +50,7 @@ class TwintRegularCheckoutService extends AbstractPlaceOrderService
 
         $params = [
             'success' => true,
-            'id' => $hashedParingId,
+            'pairingId' => $hashedParingId,
             'token' => $pairing->getToken(),
             'amount' => $this->priceCurrency->format($pairing->getAmount()),
             'modal' => $block->toHtml(),

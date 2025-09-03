@@ -56,11 +56,9 @@ $uniqueId = uniqid('twint_');
                     // Wait for the Evaluation frontend to complete its initialization.
                     window.addEventListener('checkout:init:evaluation', () => {
                         hyvaCheckout.evaluation.registerExecutable('twint-show-modal', (result) => {
+                            this.mode = 'regular';
                             this.config = result.arguments.params;
-                            this.renderModal('<?= $uniqueId ?>', this.config);
-                            this.registerCancelOrder();
-                            this.registerMonitorOrder();
-                            this.show();
+                            this.processModal('<?= $uniqueId ?>', this.config);
                         })
                     })
                 },
