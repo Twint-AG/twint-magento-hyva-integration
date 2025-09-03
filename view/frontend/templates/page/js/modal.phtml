@@ -44,7 +44,7 @@ use Magento\Framework\View\Element\Template;
 
                         this.elementId = elementId;
                         this.config = response;
-                        this.renderModal(response)
+                        this.renderModal();
                         this.registerCancelOrder();
                         this.registerMonitorOrder();
                         this.show();
@@ -55,42 +55,50 @@ use Magento\Framework\View\Element\Template;
                         return document.getElementById(this.elementId);
                     },
 
-                    renderModal(config) {
+                    renderModal() {
                         const modalContent = this.getModalContent();
+                        const config = this.config;
                         if (!modalContent || !config) return;
                         modalContent.innerHTML = config.modal;
 
-                        this.ensureBaseStates(modalContent);
-                        this.updateAmountsAndToken(modalContent, config);
-                        this.setupQrCode(modalContent, config);
+                        this.ensureBaseStates();
+                        this.updateAmountsAndToken();
+                        this.setupQrCode();
 
                         // Initialize token copier (replaces clipboard.js)
-                        this.initTokenCopier(modalContent);
-                        this.resetTokenCopierUi(modalContent);
+                        this.initTokenCopier();
+                        this.resetTokenCopierUi();
 
                         // Initialize mobile connectors (Android/iOS)
-                        this.initMobileConnectors(modalContent);
+                        this.initMobileConnectors();
                     },
 
-                    ensureBaseStates(modalContent) {
-                        const qrModal = modalContent.querySelector('#qr-modal-content');
+                    ensureBaseStates() {
+                        const modalContent = this.getModalContent();
+                        const qrModal = modalContent ? modalContent.querySelector('#qr-modal-content') : null;
                         if (qrModal) qrModal.style.display = 'block';
-                        const toPay = modalContent.querySelector('.to-pay');
+                        const toPay = modalContent ? modalContent.querySelector('.to-pay') : null;
                         if (toPay) toPay.style.display = 'block';
-                        const onSuccess = modalContent.querySelector('.on-success');
+                        const onSuccess = modalContent ? modalContent.querySelector('.on-success') : null;
                         if (onSuccess) onSuccess.style.display = 'none';
-                        const onFailed = modalContent.querySelector('.on-failed');
+                        const onFailed = modalContent ? modalContent.querySelector('.on-failed') : null;
                         if (onFailed) onFailed.style.display = 'none';
                     },
 
-                    updateAmountsAndToken(modalContent, config) {
+                    updateAmountsAndToken() {
+                        const modalContent = this.getModalContent();
+                        const config = this.config || {};
+                        if (!modalContent) return;
                         const amountEl = modalContent.querySelector('#twint-amount');
                         if (amountEl) amountEl.innerHTML = config.amount;
                         const tokenInput = modalContent.querySelector('#qr-token');
                         if (tokenInput) tokenInput.value = config.token;
                     },
 
-                    setupQrCode(modalContent, config) {
+                    setupQrCode() {
+                        const modalContent = this.getModalContent();
+                        const config = this.config || {};
+                        if (!modalContent) return;
                         const qr = modalContent.querySelector('#qrcode');
                         if (!qr) return;
                         qr.innerHTML = '';
@@ -151,8 +159,10 @@ use Magento\Framework\View\Element\Template;
                     },
 
                     // Token copier (native, replaces clipboard.js)
-                    initTokenCopier(modalContent) {
+                    initTokenCopier() {
                         try {
+                            const modalContent = this.getModalContent();
+                            if (!modalContent) return;
                             const btn = modalContent.querySelector('#tw-copy');
                             const input = modalContent.querySelector('#qr-token');
                             if (!btn || !input) return;
@@ -163,7 +173,9 @@ use Magento\Framework\View\Element\Template;
                         }
                     },
 
-                    resetTokenCopierUi(modalContent) {
+                    resetTokenCopierUi() {
+                        const modalContent = this.getModalContent();
+                        if (!modalContent) return;
                         const btn = modalContent.querySelector('#tw-copy');
                         const input = modalContent.querySelector('#qr-token');
                         if (!btn || !input) return;
@@ -248,17 +260,19 @@ use Magento\Framework\View\Element\Template;
                     },
 
                     // Mobile connectors initialization
-                    initMobileConnectors(modalContent) {
+                    initMobileConnectors() {
                         try {
-                            this.initAndroidConnector(modalContent);
-                            this.initIosConnector(modalContent);
+                            this.initAndroidConnector();
+                            this.initIosConnector();
                         } catch (e) {
                             console.error('TWINT: Failed to init mobile connectors', e);
                         }
                     },
 
                     // Android: auto open app deeplink via button with id 'twint-addroid-button'
-                    initAndroidConnector(modalContent) {
+                    initAndroidConnector() {
+                        const modalContent = this.getModalContent();
+                        if (!modalContent) return;
                         const btn = modalContent.querySelector('#twint-addroid-button');
                         if (!btn) return;
 
@@ -285,7 +299,9 @@ use Magento\Framework\View\Element\Template;
                     },
 
                     // iOS: bind bank images and select list under '#twint-ios-container'
-                    initIosConnector(modalContent) {
+                    initIosConnector() {
+                        const modalContent = this.getModalContent();
+                        if (!modalContent) return;
                         const container = modalContent.querySelector('#twint-ios-container');
                         if (!container) return;
 
