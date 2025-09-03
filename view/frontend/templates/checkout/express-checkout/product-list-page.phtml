@@ -9,7 +9,7 @@ $uniqueId = uniqid();
 
 ?>
 
-<div x-data="expressCheckout_<?= $uniqueId ?>" class="mt-2">
+<div x-data="expressCheckout_<?= $uniqueId ?>" class="tw-button-wrapper">
     <?= $block->getLayout()
               ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express-button' . $uniqueId)
               ->setTemplate('Twint_MagentoHyva::checkout/express-button.phtml')
