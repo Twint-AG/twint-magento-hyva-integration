@@ -38,7 +38,7 @@ use Magento\Framework\View\Element\Template;
 
                         if (response.showMiniCart) {
                             window.dispatchEvent(new CustomEvent('toggle-cart', {detail: {isOpen: true}}));
-                            this.isLoading = false;
+                            window.dispatchEvent(new CustomEvent('twint-stop-loading'));
                             return;
                         }
 

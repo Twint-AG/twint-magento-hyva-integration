@@ -15,5 +15,10 @@
                 </arguments>
             </block>
         </referenceContainer>
+
+        <!-- Loader -->
+        <referenceContainer name="before.body.end">
+            <block name="twint.hyva.loading" after="-" template="Twint_MagentoHyva::loading.phtml" />
+        </referenceContainer>
     </body>
 </page>

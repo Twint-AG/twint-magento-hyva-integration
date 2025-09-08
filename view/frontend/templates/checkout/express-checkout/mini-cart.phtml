@@ -39,7 +39,7 @@ $uniqueId = uniqid();
                 {
                     isLoading: false,
                     checkout() {
-                        this.isLoading = true;
+                        window.dispatchEvent(new CustomEvent("twint-start-loading"));
                         let postData = {
                             whole_cart: 1,
                             form_key: hyva.getFormKey(),
@@ -58,7 +58,7 @@ $uniqueId = uniqid();
                             .then(resp => resp.json())
                             .then(response => {
                                 this.processModal('<?= $uniqueId ?>', response)
-                                this.isLoading = false;
+                                window.dispatchEvent(new CustomEvent('twint-stop-loading'));
                             });
                     },
                 }

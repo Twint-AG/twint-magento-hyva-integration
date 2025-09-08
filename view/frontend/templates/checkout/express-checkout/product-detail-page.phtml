@@ -21,11 +21,6 @@ $uniqueId = uniqid();
               ->toHtml() ?>
 
     <?= $block->getLayout()
-              ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.loading' . $uniqueId)
-              ->setTemplate('Hyva_Theme::ui/loading.phtml')
-              ->toHtml() ?>
-
-    <?= $block->getLayout()
               ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express.modal' . $uniqueId)
               ->setTemplate('Twint_MagentoHyva::checkout/express-modal.phtml')
               ->setData('uniqueId', $uniqueId)
@@ -38,7 +33,6 @@ $uniqueId = uniqid();
             return Object.assign(
                 twint.modal(),
                 {
-                    isLoading: false,
                     checkout() {
                         const form = document.getElementById('product_addtocart_form');
 
@@ -46,7 +40,7 @@ $uniqueId = uniqid();
                             return;
                         }
 
-                        this.isLoading = true;
+                        window.dispatchEvent(new CustomEvent("twint-start-loading"));
                         let postData = {};
 
                         Array.from(form.querySelectorAll(
@@ -79,7 +73,7 @@ $uniqueId = uniqid();
                             .then(resp => resp.json())
                             .then(response => {
                                 this.processModal('<?= $uniqueId ?>', response)
-                                this.isLoading = false;
+                                window.dispatchEvent(new CustomEvent('twint-stop-loading'));
                             });
                     },
                 }

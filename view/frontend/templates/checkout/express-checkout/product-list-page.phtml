@@ -41,7 +41,7 @@ $uniqueId = uniqid();
                             return;
                         }
 
-                        this.isLoading = true;
+                        window.dispatchEvent(new CustomEvent("twint-start-loading"));
                         let postData = {};
 
                         Array.from(form.querySelectorAll(
@@ -74,7 +74,7 @@ $uniqueId = uniqid();
                             .then(resp => resp.json())
                             .then(response => {
                                 this.processModal('<?= $uniqueId ?>', response);
-                                this.isLoading = false;
+                                window.dispatchEvent(new CustomEvent('twint-stop-loading'));
                             });
                     },
                 }
