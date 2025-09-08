@@ -11,6 +11,31 @@
     width: 100%;
 }
 
+.twint .tw-close {
+    border: none !important;
+    background-color: inherit !important;
+    color: #262626 !important;
+    display: flex !important;
+    align-items: baseline !important;
+    vertical-align: middle !important;
+    font-weight: 400 !important;
+    box-shadow: none !important;
+}
+
+@media (orientation: portrait) and (max-device-width: 640px) {
+    .twint.twint-modal-content-box {
+        height: 100vh;
+        width: 100%;
+    }
+}
+
+@media (orientation: landscape) and (max-device-width: 1024px) {
+    .twint.twint-modal-content-box {
+        height: 100vh;
+        width: 100%;
+    }
+}
+
 @media screen and (max-device-width: 769px) {
     #twint-amount {
         font-size: 1.2rem;

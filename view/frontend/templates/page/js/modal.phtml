@@ -26,6 +26,11 @@ use Magento\Framework\View\Element\Template;
                     elementId: 'default-modal-content',
                     mode: 'express',
                     processModal(elementId, response) {
+                        if (!response.success) {
+                            console.error('TWINT: Failed to process modal', response);
+                            return;
+                        }
+
                         if (response.backUrl) {
                             window.location = response.backUrl;
                             return;
@@ -426,7 +431,9 @@ use Magento\Framework\View\Element\Template;
                         label.innerHTML = 'Continue shopping';
 
                         // Remove cancel order action on Hide button.
-                        this.hide = this.originalHide;
+                        this.hide = (value) => {
+                            window.location.reload();
+                        };
                     },
 
                     onFailed() {

@@ -23,7 +23,7 @@ $uniqueId = $block->getData('uniqueId');
                 <img class="tw-logo hidden md:block ml-4" src="<?= $block->getViewFileUrl('Twint_Magento::images/twint_logo.png') ?>" alt="<?= __("TWINT Logo"); ?>">
                 <button @click="hide"
                         id="tw-close-<?= $uniqueId ?>"
-                        class="flex items-center justify-between sm:justify-start mx-4"
+                        class="tw-close flex items-center justify-between sm:justify-start mx-4"
                         data-role="closeBtn"
                         type="button">
                     <span class="order-last sm:order-first"><?= __('Cancel checkout') ?></span>
