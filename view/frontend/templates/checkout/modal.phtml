@@ -1,31 +1,74 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
-use Hyva\Theme\Model\ViewModelRegistry;
-use Hyva\Theme\ViewModel\HyvaCsp;
-use Magento\Framework\Escaper;
-use Magento\Framework\View\Element\Template;
-
-// phpcs:disable Generic.Files.LineLength.TooLong
-
-/** @var Template $block */
-/** @var Escaper $escaper */
-/** @var HyvaCsp $hyvaCsp */
-/** @var ViewModelRegistry $viewModels */
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Hyva\Theme\ViewModel\HyvaCsp $hyvaCsp */
 
 ?>
-<script>
-    'use strict';
 
-    (function () {
-        window.twint.modal = function () {
+<div id="twint-checkout-modal"
+     x-data="twintCheckoutModal"
+     x-init="initialize"
+     x-cloak
+     x-spread="overlay"
+     x-bind="overlay"
+     class="fixed inset-0 flex items-center justify-center text-left bg-black bg-opacity-50" style="z-index: 40;">
+    <div x-ref="dialog"
+         role="dialog"
+         class="twint text-16 twint-modal-content-box"
+         data-role="modal"
+         data-type="<%- data.type %>"
+         tabindex="0">
+        <div data-role="focusable-start" tabindex="0"></div>
+        <div class="modal-inner-wrap twint tw-modal"
+             data-role="focusable-scope">
+            <header class="twint-modal-header sticky top-0 flex justify-between items-center bg-white">
+                <img class="tw-logo hidden md:block ml-4" src="<?= $block->getViewFileUrl('Twint_Magento::images/twint_logo.png') ?>" alt="<?= __("TWINT Logo"); ?>">
+                <button @click="hide"
+                        id="tw-close"
+                        class="tw-close flex items-center justify-between sm:justify-start mx-4"
+                        data-role="closeBtn"
+                        type="button">
+                    <span class="order-last sm:order-first"><?= __('Cancel checkout') ?></span>
+                    <svg class="mr-3 md:mr-0 md:ml-3" width="14" height="13" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.40001 12.8078L0.692261 12.1L6.29226 6.50001L0.692261 0.900011L1.40001 0.192261L7.00001 5.79226L12.6 0.192261L13.3078 0.900011L7.70776 6.50001L13.3078 12.1L12.6 12.8078L7.00001 7.20776L1.40001 12.8078Z" fill="#1C1B1F"/>
+                    </svg>
+                </button>
+            </header>
+            <div id="twint-modal-content" class="twint-modal-content p-0 md:p-4" data-role="content"></div>
+        </div>
+        <div data-role="focusable-end" tabindex="0"></div>
+    </div>
+
+    <script>
+        'use strict';
+
+        function twintCheckoutModal() {
             return Object.assign(
                 hyva.modal(),
                 {
-                    elementId: 'default-modal-content',
                     mode: 'express',
-                    processModal(elementId, response) {
+                    initialize() {
+                        window.addEventListener('twint-modal-open', (event) => {
+                            const response = event.detail.response;
+                            const mode = event.detail.mode;
+                            console.log('TWINT: Modal opened', response, mode)
+
+                            if (mode) this.mode = mode;
+
+                            if (!response) return;
+
+                            this.processModal(response);
+                        });
+                    },
+                    processModal(response) {
+                        if (response.showMiniCart) {
+                            window.dispatchEvent(new CustomEvent('toggle-cart', {detail: {isOpen: true}}));
+                            window.dispatchEvent(new CustomEvent('twint-stop-loading'));
+                            return;
+                        }
+
                         if (!response.success) {
                             console.error('TWINT: Failed to process modal', response);
                             return;
@@ -41,13 +84,6 @@ use Magento\Framework\View\Element\Template;
                             return;
                         }
 
-                        if (response.showMiniCart) {
-                            window.dispatchEvent(new CustomEvent('toggle-cart', {detail: {isOpen: true}}));
-                            window.dispatchEvent(new CustomEvent('twint-stop-loading'));
-                            return;
-                        }
-
-                        this.elementId = elementId;
                         this.config = response;
                         this.renderModal();
                         this.registerCancelOrder();
@@ -57,12 +93,13 @@ use Magento\Framework\View\Element\Template;
 
                     // Refactored helper methods for maintainability
                     getModalContent() {
-                        return document.getElementById(this.elementId);
+                        return document.getElementById('twint-modal-content');
                     },
 
                     renderModal() {
                         const modalContent = this.getModalContent();
                         const config = this.config;
+
                         if (!modalContent || !config) return;
                         modalContent.innerHTML = config.modal;
 
@@ -116,6 +153,8 @@ use Magento\Framework\View\Element\Template;
                                 colorLight: '#ffffff',
                                 correctLevel: QRCode.CorrectLevel.H
                             });
+                        } else {
+                            console.error('TWINT: QRCode is not defined');
                         }
                     },
 
@@ -442,6 +481,23 @@ use Magento\Framework\View\Element\Template;
                 }
             )
         }
-    })( window.twint = window.twint || {} );
-</script>
-<?php $hyvaCsp->registerInlineScript() ?>
+
+        window.addEventListener(
+            'alpine:init',
+            () => Alpine.data('twintCheckoutModal', twintCheckoutModal),
+            {once: true, passive: true}
+        )
+
+        window.addEventListener(
+            'init-external-scripts',
+            () => {
+                const script = document.createElement('script')
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+                script.type = 'text/javascript';
+                document.head.append(script);
+            },
+            {once: true, passive: true}
+        );
+    </script>
+    <?php $hyvaCsp->registerInlineScript() ?>
+</div>

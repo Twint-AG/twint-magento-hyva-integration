@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Hyva\Theme\Model\ViewModelRegistry $viewModels */
+/** @var \Hyva\Theme\ViewModel\Modal $modalViewModel */
+/** @var \Hyva\Theme\ViewModel\HyvaCsp $hyvaCsp */
+
+$uniqueId = uniqid('twint_');
+
+?>
+
+<script>
+    "use strict";
+
+    window.addEventListener('checkout:init:evaluation', () => {
+        hyvaCheckout.evaluation.registerExecutable('twint-show-modal', (result) => {
+            window.dispatchEvent(new CustomEvent('twint-modal-open', {
+                detail: {
+                    mode: 'regular',
+                    response: result.arguments.params,
+                }
+            }));
+        })
+    });
+</script>
+
+<?php $hyvaCsp->registerInlineScript() ?>

@@ -17,13 +17,7 @@ $uniqueId = uniqid();
 
     <?= $block->getLayout()
               ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express-button' . $uniqueId)
-              ->setTemplate('Twint_MagentoHyva::checkout/express-button.phtml')
-              ->toHtml() ?>
-
-    <?= $block->getLayout()
-              ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express.modal' . $uniqueId)
-              ->setTemplate('Twint_MagentoHyva::checkout/express-modal.phtml')
-              ->setData('uniqueId', $uniqueId)
+              ->setTemplate('Twint_MagentoHyva::checkout/express-checkout/button.phtml')
               ->toHtml() ?>
 
     <script>
@@ -31,7 +25,6 @@ $uniqueId = uniqid();
 
         function expressCheckout_<?= $uniqueId ?>() {
             return Object.assign(
-                twint.modal(),
                 {
                     checkout() {
                         const form = document.getElementById('product_addtocart_form');
@@ -72,24 +65,13 @@ $uniqueId = uniqid();
                         fetch(expressCheckoutUrl, expressCheckoutPayload)
                             .then(resp => resp.json())
                             .then(response => {
-                                this.processModal('<?= $uniqueId ?>', response)
+                                window.dispatchEvent(new CustomEvent('twint-modal-open', {detail: {response}}));
                                 window.dispatchEvent(new CustomEvent('twint-stop-loading'));
                             });
                     },
                 }
             )
         }
-
-        window.addEventListener(
-            'init-external-scripts',
-            () => {
-                const script = document.createElement('script')
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-                script.type = 'text/javascript';
-                document.head.append(script);
-            },
-            {once: true, passive: true}
-        );
 
         window.addEventListener(
             'alpine:init',

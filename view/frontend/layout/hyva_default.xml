@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <update handle="twint_modal"/>
+    <update handle="hyva_modal"/>
 
     <head>
         <css src="Twint_MagentoHyva::css/twint_override.css"/>
@@ -19,6 +19,7 @@
         <!-- Loader -->
         <referenceContainer name="before.body.end">
             <block name="twint.hyva.loading" after="-" template="Twint_MagentoHyva::loading.phtml" />
+            <block name="twint.hyva.modal" after="-" template="Twint_MagentoHyva::checkout/modal.phtml" />
         </referenceContainer>
     </body>
 </page>

@@ -3,7 +3,7 @@
     <body>
         <!-- Checkout Page -->
         <referenceContainer name="hyva.checkout.init-validation.after">
-            <block name="twint.checkout.regular-modal" template="Twint_MagentoHyva::checkout/regular-modal.phtml"/>
+            <block name="twint.checkout.regular-checkout" template="Twint_MagentoHyva::checkout/regular-checkout.phtml"/>
         </referenceContainer>
     </body>
 </page>

@@ -12,18 +12,7 @@ $uniqueId = uniqid();
 <div x-data="expressCheckout_<?= $uniqueId ?>" class="tw-button-wrapper plp">
     <?= $block->getLayout()
               ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express-button' . $uniqueId)
-              ->setTemplate('Twint_MagentoHyva::checkout/express-button.phtml')
-              ->toHtml() ?>
-
-    <?= $block->getLayout()
-              ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.loading' . $uniqueId)
-              ->setTemplate('Hyva_Theme::ui/loading.phtml')
-              ->toHtml() ?>
-
-    <?= $block->getLayout()
-              ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express.modal' . $uniqueId)
-              ->setTemplate('Twint_MagentoHyva::checkout/express-modal.phtml')
-              ->setData('uniqueId', $uniqueId)
+              ->setTemplate('Twint_MagentoHyva::checkout/express-checkout/button.phtml')
               ->toHtml() ?>
 
     <script>
@@ -31,7 +20,6 @@ $uniqueId = uniqid();
 
         function expressCheckout_<?= $uniqueId ?>() {
             return Object.assign(
-                twint.modal(),
                 {
                     isLoading: false,
                     checkout() {
@@ -73,7 +61,7 @@ $uniqueId = uniqid();
                         fetch(expressCheckoutUrl, expressCheckoutPayload)
                             .then(resp => resp.json())
                             .then(response => {
-                                this.processModal('<?= $uniqueId ?>', response);
+                                window.dispatchEvent(new CustomEvent('twint-modal-open', {detail: {response}}));
                                 window.dispatchEvent(new CustomEvent('twint-stop-loading'));
                             });
                     },
