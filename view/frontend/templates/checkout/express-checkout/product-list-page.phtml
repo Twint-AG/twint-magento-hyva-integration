@@ -67,7 +67,6 @@ $uniqueId = uniqid();
                             .then(resp => resp.json())
                             .then(response => {
                                 window.dispatchEvent(new CustomEvent('twint-modal-open', {detail: {response}}));
-                                window.dispatchEvent(new CustomEvent('twint-stop-loading'));
                             });
                     },
                 }

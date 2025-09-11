@@ -60,12 +60,22 @@ declare(strict_types = 1);
 
                             this.processModal(response);
                         });
+
+                        const url = new URL(window.location);
+                        const showMiniCart = url.searchParams.get('showMiniCart');
+
+                        if (showMiniCart) {
+                            url.searchParams.delete('showMiniCart');
+                            window.history.replaceState({}, '', url);
+                            window.dispatchEvent(new CustomEvent('toggle-cart'));
+                        }
                     },
+
                     processModal(response) {
                         if (response.showMiniCart) {
-                            window.dispatchEvent(new CustomEvent('toggle-cart', {detail: {isOpen: true}}));
-                            window.dispatchEvent(new CustomEvent('twint-stop-loading'));
-                            return;
+                            const url = new URL(window.location);
+                            url.searchParams.set('showMiniCart', '1');
+                            window.location = url.toString();
                         }
 
                         if (!response.success) {
@@ -88,6 +98,8 @@ declare(strict_types = 1);
                         this.registerCancelOrder();
                         this.registerMonitorOrder();
                         this.show();
+
+                        window.dispatchEvent(new CustomEvent('twint-stop-loading'));
                     },
 
                     // Refactored helper methods for maintainability
@@ -486,7 +498,7 @@ declare(strict_types = 1);
         window.addEventListener(
             'alpine:init',
             () => Alpine.data('twintCheckoutModal', twintCheckoutModal),
-            {once: true, passive: true}
+            {once: true}
         )
 
         window.addEventListener(
@@ -497,7 +509,7 @@ declare(strict_types = 1);
                 script.type = 'text/javascript';
                 document.head.append(script);
             },
-            {once: true, passive: true}
+            {passive: true}
         );
     </script>
     <?php $hyvaCsp->registerInlineScript() ?>
