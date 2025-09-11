@@ -5,11 +5,16 @@ declare(strict_types=1);
 /** @var \Magento\Framework\View\Element\Template $block */
 /** @var \Hyva\Theme\ViewModel\HyvaCsp $hyvaCsp */
 
+/** @var \Twint\MagentoHyva\Magewire\Payment\Method\ExpressButton $magewire */
+$magewire = $block->getMagewire();
+
 $uniqueId = uniqid();
 
 ?>
 
 <div x-data="expressCheckout_<?= $uniqueId ?>" class="tw-button-wrapper plp">
+    <?php if ($magewire->shouldRender()): ?>
+
     <?= $block->getLayout()
               ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express-button' . $uniqueId)
               ->setTemplate('Twint_MagentoHyva::checkout/express-checkout/button.phtml')
@@ -77,4 +82,6 @@ $uniqueId = uniqid();
     </script>
 
     <?php $hyvaCsp->registerInlineScript(); ?>
+
+    <?php endif; ?>
 </div>
