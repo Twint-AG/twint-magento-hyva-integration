@@ -53,7 +53,6 @@ declare(strict_types = 1);
                         window.addEventListener('twint-modal-open', (event) => {
                             const response = event.detail.response;
                             const mode = event.detail.mode;
-                            console.log('TWINT: Modal opened', response, mode)
 
                             if (mode) this.mode = mode;
 
@@ -416,8 +415,10 @@ declare(strict_types = 1);
                     registerCancelOrder() {
                         if (!this.originalHide) {
                             this.originalHide = this.hide;
-                            this.hide = (value) => {
-                                this.originalHide.call(this, value);
+                            this.hide = (event) => {
+                                if (event === undefined) return; // Prevent click.away closing the modal
+
+                                this.originalHide.call(this, event);
 
                                 const cancelUrl = '<?= $block->getUrl('twint/payment/cancel') ?>' + '?id=' + this.config.pairingId;
 
