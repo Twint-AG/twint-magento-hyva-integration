@@ -12,7 +12,7 @@ $uniqueId = uniqid();
 
 ?>
 
-<div x-data="expressCheckout_<?= $uniqueId ?>" class="px-4 md:px-6">
+<div x-show="itemsCount" x-data="expressCheckout_<?= $uniqueId ?>" class="px-4 md:px-6">
     <?php if ($magewire->shouldRender()): ?>
     <?= $block->getLayout()
               ->createBlock(\Magento\Framework\View\Element\Template::class, 'twint.express-button' . $uniqueId)
