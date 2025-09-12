@@ -500,17 +500,6 @@ declare(strict_types = 1);
             () => Alpine.data('twintCheckoutModal', twintCheckoutModal),
             {once: true}
         )
-
-        window.addEventListener(
-            'init-external-scripts',
-            () => {
-                const script = document.createElement('script')
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-                script.type = 'text/javascript';
-                document.head.append(script);
-            },
-            {passive: true}
-        );
     </script>
     <?php $hyvaCsp->registerInlineScript() ?>
 </div>

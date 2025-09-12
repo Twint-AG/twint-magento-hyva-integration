@@ -4,6 +4,7 @@
 
     <head>
         <css src="Twint_MagentoHyva::css/twint_override.css"/>
+        <script src="Twint_MagentoHyva::js/qrcode.min.js" />
     </head>
 
     <body>
