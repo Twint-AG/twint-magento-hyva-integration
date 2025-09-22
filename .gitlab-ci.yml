@@ -57,8 +57,8 @@ test:
     
     - cd "$extension_path"
     - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
+    - composer config --global http-basic.gitlab.hyva.io $HYVA_REPO_USERNAME $HYVA_REPO_TOKEN
     - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
-    
     # Install dependencies for plugin itself
     - |
       rm -f composer.lock
@@ -103,9 +103,18 @@ test:
     - |
       composer config prefer-stable true
       composer config minimum-stability dev
-      composer config repositories.twint-ag/twint-magento-hyva-integration path "$extension_path"
+      composer config repositories.hyva-themes/magento2-mollie-theme-bundle vcs https://gitlab.hyva.io/hyva-themes/hyva-compat/magento2-mollie-theme-bundle.git
+      composer config repositories.hyva-themes/magento2-compat-module-fallback vcs https://gitlab.hyva.io/hyva-themes/magento2-compat-module-fallback.git
+      composer config repositories.hyva-themes/magento2-order-cancellation-webapi vcs https://gitlab.hyva.io/hyva-themes/magento2-order-cancellation-webapi.git
+      composer config repositories.hyva-themes/magento2-default-theme vcs https://gitlab.hyva.io/hyva-themes/magento2-default-theme.git
+      composer config repositories.hyva-themes/magento2-default-theme-csp vcs https://gitlab.hyva.io/hyva-themes/magento2-default-theme-csp.git
+      composer config repositories.hyva-themes/magento2-email-module vcs https://gitlab.hyva.io/hyva-themes/magento2-email-module.git
+      composer config repositories.hyva-themes/magento2-reset-theme vcs https://gitlab.hyva.io/hyva-themes/magento2-reset-theme.git
+      composer config repositories.hyva-themes/magento2-theme-module vcs https://gitlab.hyva.io/hyva-themes/magento2-theme-module.git
+      composer config repositories.hyva-themes/hyva-checkout vcs https://gitlab.hyva.io/hyva-checkout/checkout.git
+      composer config repositories.twint-ag/twint-magento-hyva-integration path "$extension_path" --json '{"symlink": true}'
       sed -i 's#"/tmp/extension"#"/tmp/extension", "symlink": true#g' composer.json
-    
+      
     - rm -rf "$extension_path/vendor"
     - rm -rf "$extension_path/Test"
     - ls -al "$extension_path"
