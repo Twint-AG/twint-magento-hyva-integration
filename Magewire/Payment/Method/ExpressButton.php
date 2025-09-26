@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Twint\MagentoHyva\Magewire\Payment\Method;
 
 use Magento\Store\Model\StoreManagerInterface;
@@ -17,15 +19,15 @@ abstract class ExpressButton extends Component
 
     public function shouldRender(): bool
     {
-        $config    = $this->configHelper->getConfigs();
+        $config = $this->configHelper->getConfigs();
         $validated = $config->getCredentials()
-                            ->getValidated();
-        $enabled   = $config->getExpressConfig()
-                            ->getEnabled();
-        $screen    = $config->getExpressConfig()
-                            ->onScreen($this->getScreen());
-        $currency  =  $this->storeManager->getStore()
-                                         ->getCurrentCurrencyCode() === TwintConstant::CURRENCY;
+            ->getValidated();
+        $enabled = $config->getExpressConfig()
+            ->getEnabled();
+        $screen = $config->getExpressConfig()
+            ->onScreen($this->getScreen());
+        $currency = $this->storeManager->getStore()
+            ->getCurrentCurrencyCode() === TwintConstant::CURRENCY;
 
         return $enabled && $validated && $screen && $currency;
     }
