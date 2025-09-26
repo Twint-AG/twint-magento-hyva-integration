@@ -62,8 +62,6 @@ test:
       rm -f composer.lock
       composer config prefer-stable true
       composer config minimum-stability dev
-      composer config --no-plugins allow-plugins.magento/composer-dependency-version-audit-plugin true
-      composer config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
       composer config repositories.hyva-themes/magento2-mollie-theme-bundle vcs https://gitlab.hyva.io/hyva-themes/hyva-compat/magento2-mollie-theme-bundle.git
       composer config repositories.hyva-themes/magento2-compat-module-fallback vcs https://gitlab.hyva.io/hyva-themes/magento2-compat-module-fallback.git
       composer config repositories.hyva-themes/magento2-order-cancellation-webapi vcs https://gitlab.hyva.io/hyva-themes/magento2-order-cancellation-webapi.git
@@ -112,6 +110,15 @@ test:
     - |
       composer config prefer-stable true
       composer config minimum-stability dev
+      composer config repositories.hyva-themes/magento2-mollie-theme-bundle vcs https://gitlab.hyva.io/hyva-themes/hyva-compat/magento2-mollie-theme-bundle.git
+      composer config repositories.hyva-themes/magento2-compat-module-fallback vcs https://gitlab.hyva.io/hyva-themes/magento2-compat-module-fallback.git
+      composer config repositories.hyva-themes/magento2-order-cancellation-webapi vcs https://gitlab.hyva.io/hyva-themes/magento2-order-cancellation-webapi.git
+      composer config repositories.hyva-themes/magento2-default-theme vcs https://gitlab.hyva.io/hyva-themes/magento2-default-theme.git
+      composer config repositories.hyva-themes/magento2-default-theme-csp vcs https://gitlab.hyva.io/hyva-themes/magento2-default-theme-csp.git
+      composer config repositories.hyva-themes/magento2-email-module vcs https://gitlab.hyva.io/hyva-themes/magento2-email-module.git
+      composer config repositories.hyva-themes/magento2-reset-theme vcs https://gitlab.hyva.io/hyva-themes/magento2-reset-theme.git
+      composer config repositories.hyva-themes/magento2-theme-module vcs https://gitlab.hyva.io/hyva-themes/magento2-theme-module.git
+      composer config repositories.hyva-themes/hyva-checkout vcs https://gitlab.hyva.io/hyva-checkout/checkout.git
       composer config repositories.twint-ag/twint-magento-hyva-integration path "$extension_path"
       sed -i 's#"/tmp/extension"#"/tmp/extension", "symlink": true#g' composer.json
 
