@@ -469,6 +469,12 @@ declare(strict_types = 1);
                     },
 
                     showExpressSuccess(order) {
+                        const flow = (window.twintConfig && window.twintConfig.successfulFlow) || 'POPUP';
+                        if (flow === 'SUCCESS_PAGE') {
+                            window.location.href = '/checkout/onepage/success?twint_success_order=' + order;
+                            return;
+                        }
+
                         this.updateUiState({ toPay: 'none', onSuccess: 'block', onFailed: 'none' });
 
                         const modal = this.getModalContent();
