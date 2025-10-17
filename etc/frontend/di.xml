@@ -8,6 +8,10 @@
         <plugin name="hide_default_express_checkout_button" type="Twint\MagentoHyva\Plugin\HideDefaultExpressCheckoutButton" />
     </type>
 
+    <type name="Hyva\Checkout\Observer\Frontend\HyvaCheckoutSessionReset">
+        <plugin name="disable_hyva_checkout_quote_id_changed" type="Twint\MagentoHyva\Plugin\DisableQuoteIdChangedObserver" />
+    </type>
+
     <type name="Hyva\Checkout\Model\Magewire\Payment\PlaceOrderServiceProvider">
         <arguments>
             <argument name="placeOrderServiceList" xsi:type="array">
