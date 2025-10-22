@@ -13,7 +13,7 @@ class DisableQuoteIdChangedObserver
 {
     public function aroundExecute(HyvaCheckoutSessionReset $subject, Closure $closure, Observer $observer)
     {
-        if (!empty(SubmitClonedQuotePlugin::$pair)) {
+        if (SubmitClonedQuotePlugin::$pair !== []) {
             return null;
         }
 
