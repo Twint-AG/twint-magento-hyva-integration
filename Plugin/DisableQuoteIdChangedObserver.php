@@ -7,13 +7,18 @@ namespace Twint\MagentoHyva\Plugin;
 use Closure;
 use Hyva\Checkout\Observer\Frontend\HyvaCheckoutSessionReset;
 use Magento\Framework\Event\Observer;
-use Twint\Magento\Plugin\SubmitClonedQuotePlugin;
+use Twint\Magento\Model\CloneQuoteContext;
 
 class DisableQuoteIdChangedObserver
 {
+    public function __construct(
+        private readonly CloneQuoteContext $cloneQuoteContext
+    ) {
+    }
+
     public function aroundExecute(HyvaCheckoutSessionReset $subject, Closure $closure, Observer $observer)
     {
-        if (SubmitClonedQuotePlugin::$pair !== []) {
+        if ($this->cloneQuoteContext->hasQuote()) {
             return null;
         }
 

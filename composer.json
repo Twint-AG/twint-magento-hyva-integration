@@ -38,7 +38,7 @@
     "magento/framework": ">=103.0.4",
     "magento/module-sales": ">=103.0.4",
     "magento/module-csp": "*",
-    "twint-ag/twint-magento-extension": "^1.2.4"
+    "twint-ag/twint-magento-extension": "^1.2.6"
   },
   "require-dev": {
     "symplify/easy-coding-standard": "^12.1",
