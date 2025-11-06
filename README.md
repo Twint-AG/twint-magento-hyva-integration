@@ -3,6 +3,7 @@
 This module provides seamless integration of the TWINT payment gateway with your Magento 2 with Hyva Theme store. It supports both **Regular** and **Express Checkout** payment methods, offering a flexible and secure payment solution for your customers.
 
 ### Key Features
+- **Integrated with Hyva Checkout**: This extension is an adapter to help TWINT Magento extension work perfectly with the Hyva.
 - **Regular Payment**: Customers can use TWINT to complete purchases through the standard checkout process.
 - **Express Checkout**: A fast checkout option for customers, to shorten the checkout process.
 
@@ -35,6 +36,7 @@ To customize or add language support, follow these steps:
 ## Installation
 1. Install the Module via Composer:
 ```bash
+composer require twint-ag/twint-magento-extension
 composer require twint-ag/twint-magento-hyva-integration
 ```
 2. Enable the Module
@@ -55,14 +57,7 @@ bin/magento setup:static-content:deploy
 bin/magento cache:clean && bin/magento cache:flush
 ```
 ## Configuration
-1. **Navigate to TWINT settings**:  
-   In your Magento admin panel, select **TWINT** from the main left sidebar.
-2. **Set Up TWINT Credentials**:  
-   Under the **TWINT Credentials** section, upload your TWINT certificate file and provide the necessary account details, including API credentials, to complete the integration setup. To see the **TESTING option** in Environment config, you need to add `showTwintEnvOptions=1` in the URL of the Magento admin panel.
-3. **Configure Payment Methods**:  
-   Navigate to **TWINT Checkout** and **TWINT Express Checkout** sections to configure the available payment options. Customize settings such as payment flow, button placement for Express Checkout, and other relevant details according to your store’s needs.
-4. **Save Configuration**:  
-   After completing the setup in each section, click **Save** to apply the changes.
+Please follow the guideline at [TWINT Extension guideline](https://github.com/Twint-AG/twint-magento-extension/blob/latest/Documents/twint-payment-extension-guideline.md#configure-the-module).
 
 ## Usage
 Once installed and configured, TWINT will appear as a payment option in your Magento store during checkout. Customers can select TWINT, either for the full regular checkout process or via the streamlined **Express Checkout** button.
