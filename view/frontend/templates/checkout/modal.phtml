@@ -80,6 +80,9 @@ declare(strict_types = 1);
 
                         if (!response.success) {
                             console.error('TWINT: Failed to process modal', response);
+                            window.dispatchEvent(new CustomEvent('twint-stop-loading'));
+                            this.onFailed('<?= __("Payment did not succeed, please try another payment method.") ?>');
+                            this.show();
                             return;
                         }
 
@@ -494,7 +497,11 @@ declare(strict_types = 1);
                         };
                     },
 
-                    onFailed() {
+                    onFailed(message) {
+                        if (message !== undefined) {
+                            document.getElementById('twint-modal-content').textContent = message;
+                        }
+
                         this.updateUiState({ toPay: 'none', onSuccess: 'none', onFailed: 'block' });
                     },
                 }
