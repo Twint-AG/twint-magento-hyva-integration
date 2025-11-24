@@ -59,7 +59,6 @@ yarn.lock
 /coverage/
 
 app/
-bin/
 vendor/
 dev/
 lib/
