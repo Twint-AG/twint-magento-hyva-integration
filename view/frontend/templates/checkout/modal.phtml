@@ -503,6 +503,14 @@ declare(strict_types = 1);
                         }
 
                         this.updateUiState({ toPay: 'none', onSuccess: 'none', onFailed: 'block' });
+
+                        setTimeout(() => {
+                            this.hide(true);
+                        }, 3000);
+                    },
+
+                    onCancelled() {
+                        this.hide(true);
                     },
                 }
             )
