@@ -1,6 +1,6 @@
 {
   "name": "twint-ag/twint-magento-hyva-integration",
-  "version": "9.9.9-dev",
+  "version": "1.0.0-beta2",
   "description": "This module enables the use of Twint with Hyvä Theme and optionally Hyvä Checkout",
   "homepage": "https://twint.ch",
   "type": "magento2-module",
