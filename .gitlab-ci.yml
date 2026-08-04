@@ -127,6 +127,7 @@ test:
     - rm -rf "$extension_path/Test"
     - ls -al "$extension_path"
 
+    - composer require hyva-themes/magento2-theme-module:^1.3 hyva-themes/magento2-hyva-checkout:^1.3
     - composer require twint-ag/twint-magento-hyva-integration
     - composer install --prefer-dist --no-progress --no-interaction
 
