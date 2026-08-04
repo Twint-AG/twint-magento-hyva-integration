@@ -1,70 +1,78 @@
-# TWINT Payment Integration for Magento Hyva Checkout
+# TWINT Payment Integration for Magento with Hyvä
 
-This module provides seamless integration of the TWINT payment gateway with your Magento 2 with Hyva Theme store. It supports both **Regular** and **Express Checkout** payment methods, offering a flexible and secure payment solution for your customers.
+This module adapts the [TWINT Magento extension](https://github.com/Twint-AG/twint-magento-extension)
+to the Hyvä Theme, and — when Hyvä Checkout is installed — to Hyvä Checkout.
 
-### Key Features
-- **Integrated with Hyva Checkout**: This extension is an adapter to help TWINT Magento extension work perfectly with the Hyva.
-- **Regular Payment**: Customers can use TWINT to complete purchases through the standard checkout process.
-- **Express Checkout**: A fast checkout option for customers, to shorten the checkout process.
+## What you get
 
-### Language Support
+| Installed | TWINT express checkout | TWINT regular checkout |
+|---|---|---|
+| Hyvä Theme only | yes — buttons on product page, product list, cart and cart drawer | not available |
+| Hyvä Theme + Hyvä Checkout | yes | yes — QR modal inside Hyvä Checkout |
 
-This module supports the following languages:
+## Requirements
 
-- English (en_US/en_GB)
-- German (de_DE/de_CH)
-- French (fr_FR/fr_CH)
-- Italian (it_IT/it_CH)
-
-#### Adding or Customizing Languages
-
-To customize or add language support, follow these steps:
-
-1. **Locate Language Files**: Translation files are located in the `i18n` folder.
-2. **Edit or Add Translations**: use existing CSV files or create a new CSV for your desired language, following the **Magento 2** translation format.
-3. **Deploy Static Content** (if in production mode):
-   ```bash
-   php bin/magento setup:static-content:deploy <language_code>
-
-### Requirements
 - PHP `>= 8.1`
 - PHP extension: `soap`
-- Magento 2.x (`magento/framework` version as `>=103.0.4`)
-- TWINT account
-- [Hyva Theme](https://docs.hyva.io/hyva-themes/getting-started/index.html) and [Hyva Checkout](https://docs.hyva.io/checkout/hyva-checkout/index.html)
+- Magento 2 (`magento/framework >= 103.0.4`)
+- [Hyvä Theme](https://docs.hyva.io/hyva-themes/getting-started/index.html) `^1.3` — commercial, installed from the Composer repository covered by your Hyvä licence
+- [Hyvä Checkout](https://docs.hyva.io/checkout/hyva-checkout/index.html) `^1.3` — optional, required only for TWINT regular checkout
+- A TWINT account
+
+Hyvä packages are **not** declared as Composer requirements of this module, so
+installing it never asks you for Hyvä credentials. Install Hyvä yourself, the
+way your licence provides it.
 
 ## Installation
-1. Install the Module via Composer:
+
+1. Install the modules via Composer:
+
 ```bash
 composer require twint-ag/twint-magento-extension
 composer require twint-ag/twint-magento-hyva-integration
 ```
-2. Enable the Module
+
+2. Enable the modules:
+
 ```bash
-bin/magento module:enable Twint_Magento
-bin/magento module:enable Twint_MagentoHyva
+bin/magento module:enable Twint_Magento Twint_MagentoHyva
 ```
-3. Run setup upgrade and recompile dependencies
+
+3. Run setup upgrade and recompile:
+
 ```bash
 bin/magento setup:upgrade && bin/magento setup:di:compile
 ```
-4. Deploy static content (if in production mode)
+
+4. Deploy static content (production mode only):
+
 ```bash
 bin/magento setup:static-content:deploy
 ```
-5. Clear cache (if needed):
+
+5. Clear the cache:
+
 ```bash
 bin/magento cache:clean && bin/magento cache:flush
 ```
+
 ## Configuration
-Please follow the guideline at [TWINT Extension guideline](https://github.com/Twint-AG/twint-magento-extension/blob/latest/Documents/twint-payment-extension-guideline.md#configure-the-module).
 
-## Usage
-Once installed and configured, TWINT will appear as a payment option in your Magento store during checkout. Customers can select TWINT, either for the full regular checkout process or via the streamlined **Express Checkout** button.
+Follow the [TWINT extension guideline](https://github.com/Twint-AG/twint-magento-extension/blob/latest/Documents/twint-payment-extension-guideline.md#configure-the-module).
+All TWINT settings live in the `Twint_Magento` extension; this module adds no
+configuration of its own.
 
+## Languages
+
+Translations ship with `twint-ag/twint-magento-extension` and cover English
+(`en_US`, `en_GB`), German (`de_DE`, `de_CH`), French (`fr_FR`, `fr_CH`) and
+Italian (`it_IT`, `it_CH`). This module contains no translation files; to add
+or customise a language, edit the CSVs in the TWINT Magento extension.
 
 ## Support
-For any issues or feature requests, please submit a GitHub issue or contact our support team at [plugin@twint.ch](mailto:plugin@twint.ch).
+
+Open a GitHub issue or contact [plugin@twint.ch](mailto:plugin@twint.ch).
 
 ## License
-This module is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](https://opensource.org/licenses/MIT) file for more details.
+
+MIT — see [LICENSE](LICENSE).
