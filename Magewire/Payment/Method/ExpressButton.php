@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Twint\MagentoHyva\Magewire\Payment\Method;
 
+use Hyva\Theme\ViewModel\HyvaCsp;
 use Magento\Store\Model\StoreManagerInterface;
 use Magewirephp\Magewire\Component;
 use Twint\Magento\Constant\TwintConstant;
@@ -28,7 +29,7 @@ abstract class ExpressButton extends Component
             ->onScreen($this->getScreen());
         $currency = $this->storeManager->getStore()
             ->getCurrentCurrencyCode() === TwintConstant::CURRENCY;
-        $hyvaThemeAvailable = class_exists(\Hyva\Theme\ViewModel\HyvaCsp::class);
+        $hyvaThemeAvailable = class_exists(HyvaCsp::class);
 
         return $enabled && $validated && $screen && $currency && $hyvaThemeAvailable;
     }

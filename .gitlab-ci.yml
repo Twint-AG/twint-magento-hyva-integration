@@ -63,9 +63,11 @@ test:
     # Packagist + repo.magento.com are sufficient
     - |
       pristine_composer_home="$(mktemp -d)"
-      export COMPOSER_HOME="$pristine_composer_home"
-      export COMPOSER_AUTH="{\"http-basic\":{\"repo.magento.com\":{\"username\":\"$MAGENTO_PUBLIC\",\"password\":\"$MAGENTO_PRIVATE\"}}}"
-      composer install --prefer-dist --no-progress --no-interaction
+      (
+        export COMPOSER_HOME="$pristine_composer_home"
+        export COMPOSER_AUTH="{\"http-basic\":{\"repo.magento.com\":{\"username\":\"$MAGENTO_PUBLIC\",\"password\":\"$MAGENTO_PRIVATE\"}}}"
+        composer install --prefer-dist --no-progress --no-interaction
+      )
 
     # Run coding standard against the pristine install
     - ./vendor/bin/ecs --no-progress-bar

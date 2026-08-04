@@ -44,10 +44,12 @@ def repository_entries(data):
         return list(repos.items())
     if isinstance(repos, list):
         return [(str(index), repo) for index, repo in enumerate(repos)]
+    global failed
     print(
         "FAIL: composer.json repositories is neither an object nor an array: "
         + type(repos).__name__
     )
+    failed = True
     return []
 
 repo_entries = repository_entries(data)
