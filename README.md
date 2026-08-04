@@ -15,8 +15,8 @@ to the Hyvä Theme, and — when Hyvä Checkout is installed — to Hyvä Checko
 - PHP `>= 8.1`
 - PHP extension: `soap`
 - Magento 2 (`magento/framework >= 103.0.4`)
-- [Hyvä Theme](https://docs.hyva.io/hyva-themes/getting-started/index.html) `^1.3` — commercial, installed from the Composer repository covered by your Hyvä licence
-- [Hyvä Checkout](https://docs.hyva.io/checkout/hyva-checkout/index.html) `^1.3` — optional, required only for TWINT regular checkout
+- [Hyvä Theme](https://docs.hyva.io/hyva-themes/getting-started/index.html) — `hyva-themes/magento2-theme-module` `^1.3`, commercial, installed from the Composer repository covered by your Hyvä licence
+- [Hyvä Checkout](https://docs.hyva.io/checkout/hyva-checkout/index.html) — `hyva-themes/magento2-hyva-checkout` `^1.3`, optional, required only for TWINT regular checkout
 - A TWINT account
 
 Hyvä packages are **not** declared as Composer requirements of this module, so
