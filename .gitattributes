@@ -1,0 +1,7 @@
+/bin/           export-ignore
+/ecs.php        export-ignore
+/ecs.base.php   export-ignore
+/rector.php     export-ignore
+/.gitlab-ci.yml export-ignore
+/.gitignore     export-ignore
+/.gitattributes export-ignore
