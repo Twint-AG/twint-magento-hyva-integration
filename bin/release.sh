@@ -7,7 +7,11 @@ RELEASE_BOT_NAME="TWINT Release Bot"
 RELEASE_BOT_EMAIL="plugin@twint.ch"
 
 # We are on the correct branch
-test "git rev-parse --short HEAD" = "master"
+CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+if [ "${CURRENT_BRANCH}" != "master" ]; then
+  echo "Refusing to release from '${CURRENT_BRANCH}'; check out master first." >&2
+  exit 1
+fi
 
 # There are no pending changes
 git diff --exit-code
@@ -16,7 +20,7 @@ git diff --exit-code --cached
 FILES=("${PWD}/composer.json")
 
 for FILE in "${FILES[@]}"; do
-  sed -i -e "s@9.9.9-dev@${VERSION}@g" "${FILE}"
+  perl -pi -e "s@9\.9\.9-dev@${VERSION}@g" "${FILE}"
 done
 
 export GIT_COMMITTER_NAME="${RELEASE_BOT_NAME}"

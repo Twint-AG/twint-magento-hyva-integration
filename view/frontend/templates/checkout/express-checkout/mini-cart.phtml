@@ -59,7 +59,11 @@ $uniqueId = uniqid();
         )
     </script>
 
-    <?php $hyvaCsp->registerInlineScript(); ?>
+    <?php if (isset($hyvaCsp)): ?>
+
+        <?php $hyvaCsp->registerInlineScript(); ?>
+
+    <?php endif; ?>
 
     <?php endif; ?>
 </div>

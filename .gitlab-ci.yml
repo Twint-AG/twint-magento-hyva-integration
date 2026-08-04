@@ -55,6 +55,24 @@ test:
     - cp -R ./* "$extension_path"
 
     - cd "$extension_path"
+
+    # Verify composer.json resolves publicly, before any Hyvä credentials exist
+    - ./bin/check-public-deps.sh
+
+    # Install the pristine composer.json with no Hyvä credentials available, proving
+    # Packagist + repo.magento.com are sufficient
+    - |
+      pristine_composer_home="$(mktemp -d)"
+      (
+        export COMPOSER_HOME="$pristine_composer_home"
+        export COMPOSER_AUTH="{\"http-basic\":{\"repo.magento.com\":{\"username\":\"$MAGENTO_PUBLIC\",\"password\":\"$MAGENTO_PRIVATE\"}}}"
+        composer install --prefer-dist --no-progress --no-interaction
+      )
+
+    # Run coding standard against the pristine install
+    - ./vendor/bin/ecs --no-progress-bar
+    - vendor/bin/rector process --dry-run
+
     - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
     - composer config --global http-basic.gitlab.hyva.io $HYVA_REPO_USERNAME $HYVA_REPO_TOKEN
     - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
@@ -75,10 +93,6 @@ test:
       composer install --prefer-dist --no-progress --no-interaction
     - composer outdated --no-dev || true
 
-    # Run coding standard
-    - ./vendor/bin/ecs --no-progress-bar
-    - vendor/bin/rector process --dry-run
-
     # Checkout Magento Community template, and change working directory to magento root folder
     - cd -
     - composer create-project --no-security-blocking --repository-url=https://repo.magento.com/
@@ -88,7 +102,7 @@ test:
     - composer install --prefer-dist --no-progress --no-interaction
 
     # Make sure search engine is ready
-    - |
+    - &search_engine_wait |
       if [ "$MAGENTO_VERSION" = "2.4.8" ]; then
         until curl -s -X GET "http://opensearch:9200/_cluster/health" > /dev/null; do
           echo 'Waiting for OpenSearch to be ready...'
@@ -101,14 +115,14 @@ test:
         done
       fi
 
-    - |
+    - &setup_install |
       if [ "$MAGENTO_VERSION" = "2.4.8" ]; then
         bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=opensearch --opensearch-enable-auth=1 --opensearch-host=http://opensearch --opensearch-username=admin --opensearch-password=admin --opensearch-index-prefix=magento2 > /dev/null
       else
         bin/magento setup:install --base-url=http://127.0.0.1/magento2/ --db-host=mysql --db-name=$MYSQL_DATABASE --db-user=root --db-password=$MYSQL_ROOT_PASSWORD --language=en_US --currency=USD  --timezone=America/Chicago --use-rewrites=1 --search-engine=elasticsearch7  --elasticsearch-enable-auth=1 --elasticsearch-host=http://elasticsearch --elasticsearch-username=elastic  --elasticsearch-password=e_password  --elasticsearch-index-prefix=magento2 > /dev/null
       fi
 
-    - |
+    - &hyva_repositories_config |
       composer config prefer-stable true
       composer config minimum-stability dev
       composer config repositories.hyva-themes/magento2-mollie-theme-bundle vcs https://gitlab.hyva.io/hyva-themes/hyva-compat/magento2-mollie-theme-bundle.git
@@ -127,6 +141,7 @@ test:
     - rm -rf "$extension_path/Test"
     - ls -al "$extension_path"
 
+    - composer require hyva-themes/magento2-theme-module:^1.3 hyva-themes/magento2-hyva-checkout:^1.3
     - composer require twint-ag/twint-magento-hyva-integration
     - composer install --prefer-dist --no-progress --no-interaction
 
@@ -136,6 +151,78 @@ test:
     - bin/magento setup:upgrade | grep Twint
     - bin/magento setup:di:compile
   #    - bin/magento setup:static-content:deploy -f > /dev/null
+
+# Covers the Hyvä Theme-only configuration (no Hyvä Checkout), which the conditional-class
+# machinery exists to support. The matrix `test` job above only exercises Theme+Checkout.
+test-theme-only:
+  only:
+    - merge_requests
+    - master
+    - staging
+  extends: .base
+  stage: check
+  services:
+    - mysql:8.0
+    - name: elasticsearch:7.17.22
+      alias: elasticsearch
+      command: [ "elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node", "-Expack.license.self_generated.type=basic" ]
+    - name: opensearchproject/opensearch:2.11.0
+      alias: opensearch
+      command: [ "sh", "-c", "ulimit -n 65536; ulimit -u 4096; /usr/share/opensearch/opensearch-docker-entrypoint.sh" ]
+
+  variables:
+    MAGENTO_VERSION: "2.4.8"
+    PHP_VERSION: "8.3"
+    ELASTIC_PASSWORD: e_password
+    ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+
+  script:
+    # Update spc (See https://github.com/shivammathur/spc for options)
+    - spc -U
+
+    # Setup PHP
+    - spc --php-version "$PHP_VERSION" --extensions "bcmath, ctype, curl, dom, fileinfo, filter,gd, hash, iconv, intl, json, libxml, mbstring, openssl, pcre, pdo_mysql, simplexml, soap, sockets, sodium, xsl, tokenizer, xmlwriter, xsl, zlib, libxml"
+
+    - extension_path="/tmp/$CI_COMMIT_SHA"
+    - rm -rf "$extension_path"
+    - mkdir "$extension_path"
+    - rm -rf zinfra infra
+    - cp -R ./* "$extension_path"
+
+    - cd "$extension_path"
+    - composer config --global http-basic.repo.magento.com $MAGENTO_PUBLIC $MAGENTO_PRIVATE
+    - composer config --global http-basic.gitlab.hyva.io $HYVA_REPO_USERNAME $HYVA_REPO_TOKEN
+    - composer config --global gitlab-token.git.nfq.asia $GITLAB_ACCESS_TOKEN
+
+    # Checkout Magento Community template, and change working directory to magento root folder
+    - cd -
+    - composer create-project --no-security-blocking --repository-url=https://repo.magento.com/
+      magento/project-community-edition=$MAGENTO_VERSION magento > /dev/null
+    - cd magento
+
+    - composer install --prefer-dist --no-progress --no-interaction
+
+    # Make sure search engine is ready
+    - *search_engine_wait
+
+    - *setup_install
+
+    - *hyva_repositories_config
+
+    - rm -rf "$extension_path/vendor"
+    - rm -rf "$extension_path/Test"
+    - ls -al "$extension_path"
+
+    # Hyvä Theme only — deliberately no Hyvä Checkout requirement
+    - composer require hyva-themes/magento2-theme-module:^1.3
+    - composer require twint-ag/twint-magento-hyva-integration
+    - composer install --prefer-dist --no-progress --no-interaction
+
+    - bin/magento cache:clean && bin/magento cache:flush > /dev/null
+
+    - bin/magento module:enable Twint_Magento
+    - bin/magento setup:upgrade | grep Twint
+    - bin/magento setup:di:compile
 
 release:
   only:
