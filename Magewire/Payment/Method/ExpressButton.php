@@ -28,8 +28,9 @@ abstract class ExpressButton extends Component
             ->onScreen($this->getScreen());
         $currency = $this->storeManager->getStore()
             ->getCurrentCurrencyCode() === TwintConstant::CURRENCY;
+        $hyvaThemeAvailable = class_exists(\Hyva\Theme\ViewModel\HyvaCsp::class);
 
-        return $enabled && $validated && $screen && $currency;
+        return $enabled && $validated && $screen && $currency && $hyvaThemeAvailable;
     }
 
     abstract protected function getScreen(): string;
