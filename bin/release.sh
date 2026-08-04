@@ -20,7 +20,7 @@ git diff --exit-code --cached
 FILES=("${PWD}/composer.json")
 
 for FILE in "${FILES[@]}"; do
-  sed -i -e "s@9.9.9-dev@${VERSION}@g" "${FILE}"
+  perl -pi -e "s@9\.9\.9-dev@${VERSION}@g" "${FILE}"
 done
 
 export GIT_COMMITTER_NAME="${RELEASE_BOT_NAME}"
